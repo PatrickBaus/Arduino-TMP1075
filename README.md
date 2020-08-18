@@ -1,5 +1,5 @@
 # Arduino TMP1075 Library
-This a C++ Arduino library for the [Texas Instruments TMP1075](https://www.ti.com/product/TMP1075) temperature sensor. It uses an I²C interface and is intended as an LM75 replacement.
+This is a C++ Arduino library for the [Texas Instruments TMP1075](https://www.ti.com/product/TMP1075) temperature sensor. It uses the I²C interface and is intended as an LM75 replacement.
 
 ## API
 #### Constructor:
@@ -7,7 +7,7 @@ This a C++ Arduino library for the [Texas Instruments TMP1075](https://www.ti.co
   TMP1075(TwoWire &wire, uint8_t i2cAdress = 0x48);
 ```
 ___Arguments___
-* `wire` [TwoWire] : The [Wire](https://www.arduino.cc/en/reference/wire) interface used to transmit the data. The interface can be configured before calling `begin()` to support alternative pin configurations.
+* `wire` [TwoWire] : The [Wire](https://www.arduino.cc/en/reference/wire) interface used to transmit the data. The interface can be configured before calling `begin()`, e.g. to support alternative pin configurations.
 * `i2cAdress` [uint8_t] : The I²C address of the TMP1075 as configured using the A0, A1, A2 pins. The default is `0x48`, which is the address when all three pins are tied low.
 
 ### Methods
@@ -19,7 +19,7 @@ This function calls the [`Wire.begin()`](https://www.arduino.cc/en/Reference/Wir
   uint8_t getDeviceId();
 ```
 ___Returns___
-* [uint8_t] : The sensor device ID. This should be `0x75`.
+* [uint8_t] : The sensor device ID. This should be `0x75`, if everything is set up correctly.
 
 ```c
   int32_t getTemperatureRaw();
@@ -72,7 +72,7 @@ ___Returns___
   void setFaultsUntilAlert(const ConsecutiveFaults value=Fault_1);
 ```
 ___Arguments___
-* `value` [ConsecutiveFaults] :  The number of consecutive faults before the alert pin is triggered. it can be a number between 1-4.
+* `value` [ConsecutiveFaults] :  The number of consecutive faults before the alert pin is triggered. It can be a number between 1-4.
 	This can be set by the ConsecutiveFaults enum:
 	```c
 	enum ConsecutiveFaults : uint8_t {
