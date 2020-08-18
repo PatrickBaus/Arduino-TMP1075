@@ -42,6 +42,11 @@ ___Returns___
 * [bool] : The conversion mode as described above.
 
 ```c
+  void startConversion();
+```
+Immediately start a new conversion. The result will be available after the conversion time. See `setConversionTime()`.
+
+```c
   void setConversionTime(const ConversionTime value=ConversionTime27_5ms);
 ```
 ___Arguments___
