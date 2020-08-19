@@ -119,21 +119,23 @@ ___Arguments___
 ___Returns___
 * [bool] : `true` if the alert is SMBus compatible and needs clearing, `false` if the alert stays active while the alert condition is active.
 
-```c
-  void setLowTemperatureLimitRaw(const int16_t value=0x4b00);
-  void setLowTemperatureLimitCelsius(const float value=75.f);
-```
-___Arguments___
-* `value` [int16_t] : If the temperature goes below this value, an alert will be triggered. The scale is the same as `getTemperatureRaw()`. To disable the low temperature alert, set the value to `0x8000`. The default (also after reset) is 75 °C (`0x4b00`).
-* `value`[float] The same as above, but in units of °C. The default (also after reset) is 75 °C.
 
 ```c
   void setHighTemperatureLimitRaw(const int16_t value=0x5000);
   void setHighTemperatureLimitCelsius(const float value=80.f);
 ```
 ___Arguments___
-* `value` [int16_t] : If the temperature goes above this value, an alert will be triggered. The scale is the same as `getTemperatureRaw()`. To disable the high temperature alert, set the value to `0x7FF0`. The default (also after reset) is 80 °C (`0x5000`).
+* `value` [int16_t] : If the temperature goes above this value, an alert will be triggered. The scale is the same as `getTemperatureRaw()`. To disable the temperature alert, set the high value value to `0x7FF0` and the low value to `0x8000`. The default (also after reset) is 80 °C (`0x5000`).
 * `value`[float] The same as above, but in units of °C. The default (also after reset) is 80 °C.
+
+```c
+  void setLowTemperatureLimitRaw(const int16_t value=0x4b00);
+  void setLowTemperatureLimitCelsius(const float value=75.f);
+```
+This setting acts as a hysteresis. When in comparator mode, the alert, once triggered, will only be released, if the temperature drops below this value. When in interrupt mode, the alert will only trigger again, if the temperature was below this value and then rises above the high threshold.
+___Arguments___
+* `value` [int16_t] : If the temperature goes below this value, the alert will be released. The scale is the same as `getTemperatureRaw()`. To disable the alert, set the low value to `0x8000` and the high value to `0x7FF0`. The default (also after reset) is 75 °C (`0x4b00`).
+* `value`[float] The same as above, but in units of °C. The default (also after reset) is 75 °C.
 
 ```c
   int16_t getLowTemperatureLimitRaw();
