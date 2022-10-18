@@ -84,7 +84,7 @@ namespace TMP1075 {
       float convertToCelsius(const int16_t value);
       int16_t convertFromCelsius(const float value);
       uint16_t readRegister(const uint8_t reg);
-      uint16_t i2cAdress;
+      uint8_t i2cAdress;
       uint8_t configRegister;
   };
 }
