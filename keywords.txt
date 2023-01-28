@@ -1,0 +1,35 @@
+# Syntax Coloring Map For ExampleLibrary
+
+# Datatypes (KEYWORD1)
+TMP1075                        KEYWORD1
+ConsecutiveFaults              KEYWORD1
+ConversionTime                 KEYWORD1
+Offsets                        KEYWORD1
+
+# Methods and Functions (KEYWORD2)
+getTemperatureRaw              KEYWORD2
+getTemperatureCelsius          KEYWORD2
+startConversion                KEYWORD2
+getConversionMode              KEYWORD2
+setConversionMode              KEYWORD2
+getConversionTime              KEYWORD2
+setConversionTime              KEYWORD2
+getFaultsUntilAlert            KEYWORD2
+setFaultsUntilAlert            KEYWORD2
+getAlertPolarity               KEYWORD2
+setAlertPolarity               KEYWORD2
+getAlertMode                   KEYWORD2
+setAlertMode                   KEYWORD2
+getLowTemperatureLimitRaw      KEYWORD2
+getLowTemperatureLimitCelsius  KEYWORD2
+setLowTemperatureLimitRaw      KEYWORD2
+setLowTemperatureLimitCelsius  KEYWORD2
+getHighTemperatureLimitRaw     KEYWORD2
+getHighTemperatureLimitCelsius KEYWORD2
+setHighTemperatureLimitRaw     KEYWORD2
+setHighTemperatureLimitCelsius KEYWORD2
+getDeviceId                    KEYWORD2
+
+# Instances (KEYWORD2)
+
+# Constants (LITERAL1)
