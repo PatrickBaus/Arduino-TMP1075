@@ -23,9 +23,8 @@
 namespace TMP1075 {
   TMP1075::TMP1075(TwoWire &_wire, const uint8_t _i2cAdress): wire(_wire), i2cAdress(_i2cAdress), configRegister(0x00FF) {}
 
-  void TMP1075::begin()
+  void TMP1075::begin() //Warning : wire.begin() needs to be call independently from main.
   {
-    this->wire.begin(this->i2cAdress);
     this->configRegister = (uint8_t)(this->readRegister(0x01) >> 8);
   }
 
