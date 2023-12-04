@@ -22,6 +22,7 @@
 #define TMP1075_H
 
 #include <stdint.h>   // uint16_t, etc.
+#include <Arduino.h>
 #include <Wire.h>     // TwoWire
 
 namespace TMP1075 {
