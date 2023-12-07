@@ -52,7 +52,7 @@ namespace TMP1075 {
   {
     public:
       // i2cAdress is the default address when A0, A1 and A2 is tied low
-      TMP1075(TwoWire &wire, uint8_t i2cAdress = 0x48);
+      TMP1075(TwoWire& wire, uint8_t i2cAddress = 0x48);
 
       void begin();
       int16_t getTemperatureRaw();
@@ -78,13 +78,13 @@ namespace TMP1075 {
       void setHighTemperatureLimitCelsius(const float value=80.f);
       uint8_t getDeviceId();
     private:
-      TwoWire &wire;
+      TwoWire& wire;
       void writeRegister(const uint8_t reg, const uint16_t value);
       void writeRegister(const uint8_t reg, const uint8_t value);
       float convertToCelsius(const int16_t value);
       int16_t convertFromCelsius(const float value);
       uint16_t readRegister(const uint8_t reg);
-      uint8_t i2cAdress;
+      uint8_t i2cAddress;
       uint8_t configRegister;
   };
 }

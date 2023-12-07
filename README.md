@@ -156,9 +156,11 @@ ___Returns___
 ## Examples
 This is an example, which runs on the Arduino platform. The example was tested on an STM32F103RC using [Arduino_STM32](https://github.com/rogerclarkmelbourne/Arduino_STM32), but it should work on any Arduino platform.
 ```c
+#include <Arduino.h>  // Some Arduino cores use the arduino namespace. This is addressed in Arduino.h.
+#include <Wire.h>    // TwoWires
+
 #include <TMP1075.h>    // Use quotation marks if the library is in the same folder as the sketch
 // #include "TMP1075/src/TMP1075.h"    // Use this import, if you copied the library folder into the sketch folder
-#include <Arduino.h>
 
 //TwoWire wire = TwoWire(1, I2C_REMAP, 400*1000);     // Arduino_STM32 use I²C 1 with alternative pin mapping
 TwoWire wire = Wire;

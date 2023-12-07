@@ -21,16 +21,16 @@
 #include "TMP1075.h"
 
 namespace TMP1075 {
-  TMP1075::TMP1075(TwoWire &_wire, const uint8_t _i2cAdress): wire(_wire), i2cAdress(_i2cAdress), configRegister(0x00FF) {}
+  TMP1075::TMP1075(TwoWire& _wire, const uint8_t _i2cAddress): wire(_wire), i2cAddress(_i2cAddress), configRegister(0x00FF) {}
 
   void TMP1075::begin()
   {
-    this->wire.begin(this->i2cAdress);
+    this->wire.begin(this->i2cAddress);
     this->configRegister = (uint8_t)(this->readRegister(0x01) >> 8);
   }
 
   void TMP1075::writeRegister(const uint8_t pointerRegister, const uint16_t value) {
-    this->wire.beginTransmission(this->i2cAdress);
+    this->wire.beginTransmission(this->i2cAddress);
     this->wire.write(pointerRegister);
     this->wire.write((value >> 8) & 0xFF);
     this->wire.write((value >> 0) & 0xFF);
@@ -38,17 +38,17 @@ namespace TMP1075 {
   }
 
   void TMP1075::writeRegister(const uint8_t pointerRegister, const uint8_t value) {
-    this->wire.beginTransmission(this->i2cAdress);
+    this->wire.beginTransmission(this->i2cAddress);
     this->wire.write(pointerRegister);
     this->wire.write(value);
     this->wire.endTransmission();
   }
 
   uint16_t TMP1075::readRegister(const uint8_t pointerRegister) {
-    this->wire.beginTransmission(this->i2cAdress);
+    this->wire.beginTransmission(this->i2cAddress);
     this->wire.write(pointerRegister);
     this->wire.endTransmission(false);
-    this->wire.requestFrom(this->i2cAdress, 2, true);
+    this->wire.requestFrom(this->i2cAddress, (uint8_t)2, (uint8_t)true);
     return this->wire.read() << 8 | this->wire.read();
   }
 
