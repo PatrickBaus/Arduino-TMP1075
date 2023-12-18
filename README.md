@@ -14,7 +14,10 @@ ___Arguments___
 ```c
   void begin();
 ```
-This function calls the [`Wire.begin()`](https://www.arduino.cc/en/Reference/WireBegin) function interally, using the `i2cAdress` previously set.
+This function calls initialises the `TMP1075` library by synchronizing the config register with the device. The I²C bus must be initialised first.
+
+> [!IMPORTANT]
+Do remember to call the [`Wire.begin()`](https://www.arduino.cc/en/Reference/WireBegin) function before calling this function to enable the I²C bus.
 ```c
   uint8_t getDeviceId();
 ```
@@ -99,7 +102,7 @@ ___Returns___
   setAlertPolarity(const bool isHigh=false)
 ```
 ___Arguments___
-* `isHigh` [bool] : Setting this to true causes the alert pin to float high (using an external pull-up resistor) in case of an alert. Setting it to false will cause the pin to be pulled low in case of an alert. By default the alert pin will be pulled low.
+* `isHigh` [bool] : Setting this to true causes the alert pin to float high (using an external pull-up resistor) in case of an alert. Setting it to false will cause the pin to be pulled low in case of an alert. By default, the alert pin will be pulled low.
 
 ```c
   bool getAlertPolarity();
@@ -111,7 +114,7 @@ ___Returns___
   void setAlertMode(const bool isInterrupt=false);
 ```
 ___Arguments___
-* `isInterrupt` [bool] : When set to `true`, the alert pin is SMBus compatible. Once the alert is active, the device will wait for an `SMBus Alert` command on the bus, then it will release the pin. If set to false, it pin will stay triggered until the alert condition is gone. By default, the alert pin is not SMBus compatible.
+* `isInterrupt` [bool] : When set to `true`, the alert pin is SMBus compatible. Once the alert is active, the device will wait for an `SMBus Alert` command on the bus, then it will release the pin. If set to false, its pin will stay triggered until the alert condition is gone. By default, the alert pin is not SMBus compatible.
 
 ```c
   bool getAlertMode();
@@ -125,7 +128,7 @@ ___Returns___
   void setHighTemperatureLimitCelsius(const float value=80.f);
 ```
 ___Arguments___
-* `value` [int16_t] : If the temperature goes above this value, an alert will be triggered. The scale is the same as `getTemperatureRaw()`. To disable the temperature alert, set the high value value to `0x7FF0` and the low value to `0x8000`. The default (also after reset) is 80 °C (`0x5000`).
+* `value` [int16_t] : If the temperature goes above this value, an alert will be triggered. The scale is the same as `getTemperatureRaw()`. To disable the temperature alert, set the high value to `0x7FF0` and the low value to `0x8000`. The default (also after reset) is 80 °C (`0x5000`).
 * `value`[float] The same as above, but in units of °C. The default (also after reset) is 80 °C.
 
 ```c
@@ -168,7 +171,8 @@ TMP1075::TMP1075 tmp1075 = TMP1075::TMP1075(wire);    // The library uses the na
 
 void setup() {
   Serial.begin(115200);
-  tmp1075.begin();    // Calls Wire.begin(addr)
+  wire.begin(0x48);  // See definition of wire above
+  tmp1075.begin();  // Syncs the config register
 }
 
 void loop() {
@@ -193,6 +197,7 @@ I use [SemVer](http://semver.org/) for versioning. For the versions available, s
 ## Authors
 
 * **Patrick Baus** - *Initial work* - [PatrickBaus](https://github.com/PatrickBaus)
+* **Jerome** - *Contributor* - [Jerome](https://github.com/Mimosa-oceanis)
 
 ## License
 
