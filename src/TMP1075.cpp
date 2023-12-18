@@ -25,7 +25,6 @@ namespace TMP1075 {
 
   void TMP1075::begin()
   {
-    this->wire.begin(this->i2cAddress);
     this->configRegister = (uint8_t)(this->readRegister(0x01) >> 8);
   }
 

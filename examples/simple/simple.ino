@@ -10,7 +10,8 @@ TMP1075::TMP1075 tmp1075 = TMP1075::TMP1075(wire);    // The library uses the na
 
 void setup() {
     Serial.begin(115200);
-    tmp1075.begin();    // Calls Wire.begin(addr)
+    wire.begin(0x48);  // See definition of wire above
+    tmp1075.begin();  // Syncs the config register
 }
 
 void loop() {
