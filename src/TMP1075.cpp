@@ -56,7 +56,7 @@ namespace TMP1075 {
   }
 
   float TMP1075::getTemperatureCelsius() {
-    return TMP1075::TMP1075::convertToCelsius(this->getTemperatureRaw());
+    return TMP1075::convertToCelsius(this->getTemperatureRaw());
   }
 
   void TMP1075::startConversion() {
@@ -128,11 +128,11 @@ namespace TMP1075 {
   }
 
   void TMP1075::setLowTemperatureLimitCelsius(const float value) {
-    this->setLowTemperatureLimitRaw(TMP1075::TMP1075::convertFromCelsius(value));
+    this->setLowTemperatureLimitRaw(TMP1075::convertFromCelsius(value));
   }
 
   float TMP1075::getLowTemperatureLimitCelsius() {
-    return TMP1075::TMP1075::convertToCelsius(this->getLowTemperatureLimitRaw());
+    return TMP1075::convertToCelsius(this->getLowTemperatureLimitRaw());
   }
 
   int16_t TMP1075::getHighTemperatureLimitRaw() {
@@ -140,7 +140,7 @@ namespace TMP1075 {
   }
 
   float TMP1075::getHighTemperatureLimitCelsius() {
-    return TMP1075::TMP1075::convertToCelsius(this->getHighTemperatureLimitRaw());
+    return TMP1075::convertToCelsius(this->getHighTemperatureLimitRaw());
   }
 
   void TMP1075::setHighTemperatureLimitRaw(const int16_t value) {
@@ -148,7 +148,7 @@ namespace TMP1075 {
   }
 
   void TMP1075::setHighTemperatureLimitCelsius(const float value) {
-    this->setHighTemperatureLimitRaw(TMP1075::TMP1075::convertFromCelsius(value));
+    this->setHighTemperatureLimitRaw(TMP1075::convertFromCelsius(value));
   }
 
   uint8_t TMP1075::getDeviceId() {
