@@ -11,13 +11,13 @@ ___Arguments___
 * `i2cAdress` [uint8_t] : The I²C address of the TMP1075 as configured using the A0, A1, A2 pins. The default is `0x48`, which is the address when all three pins are tied low.
 
 ### Methods
+> [!IMPORTANT]
+Do remember to call the [`Wire.begin()`](https://www.arduino.cc/reference/en/language/functions/communication/wire/begin/) function before calling any function to enable the I²C bus.
 ```c
   void begin();
 ```
 This function calls initialises the `TMP1075` library by synchronizing the config register with the device. The I²C bus must be initialised first.
 
-> [!IMPORTANT]
-Do remember to call the [`Wire.begin()`](https://www.arduino.cc/en/Reference/WireBegin) function before calling this function to enable the I²C bus.
 ```c
   uint8_t getDeviceId();
 ```
@@ -171,7 +171,7 @@ TMP1075::TMP1075 tmp1075 = TMP1075::TMP1075(wire);    // The library uses the na
 
 void setup() {
   Serial.begin(115200);
-  wire.begin(0x48);  // See definition of wire above
+  wire.begin();  // See definition of wire above
   tmp1075.begin();  // Syncs the config register
 }
 
