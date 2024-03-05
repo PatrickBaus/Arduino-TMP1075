@@ -151,8 +151,8 @@ namespace TMP1075 {
     this->setHighTemperatureLimitRaw(TMP1075::convertFromCelsius(value));
   }
 
-  uint8_t TMP1075::getDeviceId() {
-    return (uint8_t)(this->readRegister(0x0F) >> 8);
+  uint16_t TMP1075::getDeviceId() {
+    return (uint16_t)(this->readRegister(0x0F));
   }
 
   float TMP1075::convertToCelsius(const int16_t value) {

@@ -78,7 +78,7 @@ namespace TMP1075 {
       float getHighTemperatureLimitCelsius();
       void setHighTemperatureLimitRaw(int16_t value=0x5000);
       void setHighTemperatureLimitCelsius(float value=80.f);
-      uint8_t getDeviceId();
+      uint16_t getDeviceId();
     private:
       TwoWire& wire;
       void writeRegister(uint8_t reg, uint16_t value);
