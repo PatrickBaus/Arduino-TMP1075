@@ -19,13 +19,13 @@ Do remember to call the [`Wire.begin()`](https://www.arduino.cc/reference/en/lan
 This function calls initialises the `TMP1075` library by synchronizing the config register with the device. The I²C bus must be initialised first.
 
 ```c
-  uint8_t getDeviceId();
+  uint16_t getDeviceId();
 ```
 ___Returns___
-* [uint8_t] : The sensor device ID. This should be `0x75`, if everything is set up correctly.
+* [uint16_t] : The sensor device ID. This should be `0x7500`, if everything is set up correctly.
 
 ```c
-  int32_t getTemperatureRaw();
+  int16_t getTemperatureRaw();
   float getTemperatureCelsius();
 ```
 ___Returns___
@@ -99,7 +99,7 @@ ___Returns___
 * [ConsecutiveFaults] : The number of consecutive faults until an alert is triggered as described above.
 
 ```c
-  setAlertPolarity(const bool isHigh=false)
+  void setAlertPolarity(const bool isHigh=false);
 ```
 ___Arguments___
 * `isHigh` [bool] : Setting this to true causes the alert pin to float high (using an external pull-up resistor) in case of an alert. Setting it to false will cause the pin to be pulled low in case of an alert. By default, the alert pin will be pulled low.
@@ -154,7 +154,7 @@ ___Returns___
 ```
 ___Returns___
 * [int16_t] :  See `setHighTemperatureLimitRaw()`.
-* [float] :  See `setLowTemperatureLimitCelsius()`.
+* [float] :  See `setHighTemperatureLimitCelsius()`.
 
 ## Examples
 This is an example, which runs on the Arduino platform. The example was tested on an STM32F103RC using [Arduino_STM32](https://github.com/rogerclarkmelbourne/Arduino_STM32), but it should work on any Arduino platform.
