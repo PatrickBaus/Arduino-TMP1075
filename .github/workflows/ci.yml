@@ -1,8 +1,17 @@
 name: CI
 
 on:
+  # Pull requests are tested by the pull_request event. Running on every push as well would test each commit twice.
   push:
+    branches:
+      - master
   pull_request:
+  workflow_dispatch:
+
+# A newer commit on the same branch or pull request cancels the runs of the older one
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -11,6 +20,7 @@ jobs:
   test:
     name: Host tests and coverage
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -22,7 +32,7 @@ jobs:
         run: cmake -S test -B build -DCMAKE_BUILD_TYPE=Debug
 
       - name: Build
-        run: cmake --build build
+        run: cmake --build build --parallel
 
       - name: Run tests
         run: ctest --test-dir build --output-on-failure
@@ -50,6 +60,7 @@ jobs:
   lint:
     name: Arduino Lint
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -66,6 +77,7 @@ jobs:
   compile-examples:
     name: Compile examples (${{ matrix.fqbn }})
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
