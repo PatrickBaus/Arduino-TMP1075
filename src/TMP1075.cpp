@@ -47,8 +47,14 @@ namespace TMP1075 {
     this->wire.beginTransmission(this->i2cAddress);
     this->wire.write(pointerRegister);
     this->wire.endTransmission(false);
-    this->wire.requestFrom(this->i2cAddress, (uint8_t)2, (uint8_t)true);
-    return this->wire.read() << 8 | this->wire.read();
+    if (this->wire.requestFrom(this->i2cAddress, (uint8_t)2, (uint8_t)true) != 2) {
+      // The device did not answer (or not with two bytes). There is no valid data to return.
+      return 0xFFFF;
+    }
+    // The two reads must be sequenced, the MSB is sent first.
+    const uint8_t msb = (uint8_t)this->wire.read();
+    const uint8_t lsb = (uint8_t)this->wire.read();
+    return (uint16_t)((msb << 8) | lsb);
   }
 
   int16_t TMP1075::getTemperatureRaw() {
