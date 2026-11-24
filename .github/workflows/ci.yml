@@ -1,0 +1,108 @@
+name: CI
+
+on:
+  # Pull requests are tested by the pull_request event. Running on every push as well would test each commit twice.
+  push:
+    branches:
+      - master
+  pull_request:
+  workflow_dispatch:
+
+# A newer commit on the same branch or pull request cancels the runs of the older one
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Host tests and coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install gcovr
+        run: pipx install gcovr==8.8
+
+      - name: Configure
+        run: cmake -S test -B build -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Build
+        run: cmake --build build --parallel
+
+      - name: Run tests
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Check coverage (100 % lines and branches of src/)
+        run: |
+          mkdir -p coverage
+          gcovr --root . --filter src/ \
+            --exclude-throw-branches --exclude-unreachable-branches \
+            --fail-under-line 100 --fail-under-branch 100 \
+            --print-summary \
+            --txt coverage/coverage.txt --txt-metric branch \
+            --xml coverage/coverage.xml \
+            --html-details coverage/index.html \
+            build
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: coverage-report
+          path: coverage/
+          if-no-files-found: warn
+
+  lint:
+    name: Arduino Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # "strict" is not possible, because the name of the library ("TMP1075 Library") contains a
+      # space (LP015) and the word "library" (LP016). Renaming it would break existing installations.
+      # The library is not in the Library Manager index, so "library-manager: update" fails LP018.
+      - name: Run arduino-lint
+        uses: arduino/arduino-lint-action@9a3603836c75e41753e531167395edeb90ba5dae # v3.0.0
+        with:
+          library-manager: false
+          compliance: specification
+
+  compile-examples:
+    name: Compile examples (${{ matrix.fqbn }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - fqbn: arduino:avr:uno       # 8 bit
+            platforms: |
+              - name: arduino:avr
+          - fqbn: arduino:samd:mkrzero  # 32 bit
+            platforms: |
+              - name: arduino:samd
+          - fqbn: esp32:esp32:esp32     # 32 bit
+            platforms: |
+              - name: esp32:esp32
+                source-url: https://espressif.github.io/arduino-esp32/package_esp32_index.json
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Compile examples
+        uses: arduino/compile-sketches@3f3921bad94c706a153e6d7294445b49d7f76a63 # v1.1.4
+        with:
+          fqbn: ${{ matrix.fqbn }}
+          platforms: ${{ matrix.platforms }}
+          libraries: |
+            - source-path: ./
+          sketch-paths: |
+            - examples
+          enable-deltas-report: false
