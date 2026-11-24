@@ -1,0 +1,87 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Host tests and coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install gcovr
+        run: pipx install gcovr==8.8
+
+      - name: Configure
+        run: cmake -S test -B build -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Build
+        run: cmake --build build
+
+      - name: Run tests
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Check coverage (100 % lines and branches of src/)
+        run: |
+          mkdir -p coverage
+          gcovr --root . --filter src/ \
+            --exclude-throw-branches --exclude-unreachable-branches \
+            --fail-under-line 100 --fail-under-branch 100 \
+            --print-summary \
+            --txt coverage/coverage.txt --txt-metric branch \
+            --xml coverage/coverage.xml \
+            --html-details coverage/index.html \
+            build
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          if-no-files-found: warn
+
+  lint:
+    name: Arduino Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # "strict" is not possible, because the name of the library ("TMP1075 Library") contains a
+      # space (LP015) and the word "library" (LP016). The name is the identifier of the library in
+      # the Library Manager and cannot be changed without breaking existing installations.
+      - name: Run arduino-lint
+        uses: arduino/arduino-lint-action@v2
+        with:
+          library-manager: update
+          compliance: specification
+
+  compile-examples:
+    name: Compile examples (${{ matrix.fqbn }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        fqbn:
+          - arduino:avr:uno       # 8 bit
+          - arduino:samd:mkrzero  # 32 bit
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compile examples
+        uses: arduino/compile-sketches@v1
+        with:
+          fqbn: ${{ matrix.fqbn }}
+          libraries: |
+            - source-path: ./
+          sketch-paths: |
+            - examples
+          enable-deltas-report: false

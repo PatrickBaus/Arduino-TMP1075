@@ -1,4 +1,6 @@
 # Arduino TMP1075 Library
+[![CI](https://github.com/PatrickBaus/Arduino-TMP1075/actions/workflows/ci.yml/badge.svg)](https://github.com/PatrickBaus/Arduino-TMP1075/actions/workflows/ci.yml)
+
 This is a C++ Arduino library for the [Texas Instruments TMP1075](https://www.ti.com/product/TMP1075) temperature sensor. It uses the I²C interface and is intended as an LM75 replacement.
 
 ## API
@@ -208,6 +210,8 @@ The tests must cover 100 % of the lines and branches of the library. This is che
 gcovr --root . --filter src/ --exclude-throw-branches --exclude-unreachable-branches \
   --fail-under-line 100 --fail-under-branch 100 --txt-metric branch build
 ```
+
+The tests, [arduino-lint](https://github.com/arduino/arduino-lint) and a test build of the examples are run by GitHub Actions for every push and pull request.
 
 ## Versioning
 
