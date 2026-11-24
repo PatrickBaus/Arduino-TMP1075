@@ -21,7 +21,7 @@
 #include "TMP1075.h"
 
 namespace TMP1075 {
-  TMP1075::TMP1075(TwoWire& _wire, const uint8_t _i2cAddress): wire(_wire), i2cAddress(_i2cAddress), configRegister(0x00FF) {}
+  TMP1075::TMP1075(TwoWire& _wire, const uint8_t _i2cAddress): wire(_wire), i2cAddress(_i2cAddress), configRegister(0x00) {}
 
   void TMP1075::begin()
   {
