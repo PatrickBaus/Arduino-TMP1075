@@ -160,6 +160,14 @@ namespace TMP1075 {
   }
 
   int16_t TMP1075::convertFromCelsius(const float value) {
+    // Clamp to the range of the sensor. Converting a float, that is out of range, to an integer is
+    // undefined behaviour. The comparisons are written to catch NaN as well.
+    if (value >= 127.9375f) {
+      return 0x7FF0;
+    }
+    if (!(value > -128.f)) {
+      return INT16_MIN;
+    }
     return  (int16_t)(value * 16 / 0.0625f);
   }
 }   // namespace TMP1075
