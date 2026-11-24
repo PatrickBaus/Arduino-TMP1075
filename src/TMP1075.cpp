@@ -81,7 +81,7 @@ namespace TMP1075 {
 
   void TMP1075::setConversionTime(const ConversionTime value) {
     if (ConversionTime((configRegister >> Offsets::R) & 0b11) != value) {
-      this->configRegister  = (this->configRegister & ~(11 << Offsets::R)) | (value << Offsets::R);
+      this->configRegister  = (this->configRegister & ~(0b11 << Offsets::R)) | (value << Offsets::R);
       this->writeRegister(0x01, this->configRegister);
     }
   }
@@ -92,7 +92,7 @@ namespace TMP1075 {
 
   void TMP1075::setFaultsUntilAlert(const ConsecutiveFaults value) {
     if (ConsecutiveFaults((configRegister >> Offsets::F) & 0b11) != value) {
-      this->configRegister  = (this->configRegister & ~(11 << Offsets::F)) | (value << Offsets::F);
+      this->configRegister  = (this->configRegister & ~(0b11 << Offsets::F)) | (value << Offsets::F);
       this->writeRegister(0x01, this->configRegister);
     }
   }
