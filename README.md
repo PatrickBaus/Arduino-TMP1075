@@ -32,6 +32,9 @@ ___Returns___
 * [int16_t] : The raw temperature data as returned by the sensor. A 16-bit integer that represents the temperature range from –128 °C to 127.9375 °C in steps of 0.0625 K. The 4 LSB are always 0. To convert from raw values to Celsius one needs to calculate `value / 16 * 0.0625`. Note: Beware of bit shifts, because the return value is a signed integer.
 * [float] : The temperature in units of °C.
 
+> [!NOTE]
+If the sensor does not answer, all functions that read a register return `0xFFFF` (`-1` for the signed raw values, which is -0.0039 °C). This can be told apart from a real temperature or limit, because the 4 LSB of those are always 0.
+
 ```c
   void setConversionMode(const bool isSingleShot=false);
 ```
@@ -129,7 +132,7 @@ ___Returns___
 ```
 ___Arguments___
 * `value` [int16_t] : If the temperature goes above this value, an alert will be triggered. The scale is the same as `getTemperatureRaw()`. To disable the temperature alert, set the high value to `0x7FF0` and the low value to `0x8000`. The default (also after reset) is 80 °C (`0x5000`).
-* `value`[float] The same as above, but in units of °C. The default (also after reset) is 80 °C.
+* `value`[float] The same as above, but in units of °C. The default (also after reset) is 80 °C. Values outside of the range of the sensor (–128 °C to 127.9375 °C) are clamped.
 
 ```c
   void setLowTemperatureLimitRaw(const int16_t value=0x4b00);
@@ -138,7 +141,7 @@ ___Arguments___
 This setting acts as a hysteresis. When in comparator mode, the alert, once triggered, will only be released, if the temperature drops below this value. When in interrupt mode, the alert will only trigger again, if the temperature was below this value and then rises above the high threshold.
 ___Arguments___
 * `value` [int16_t] : If the temperature goes below this value, the alert will be released. The scale is the same as `getTemperatureRaw()`. To disable the alert, set the low value to `0x8000` and the high value to `0x7FF0`. The default (also after reset) is 75 °C (`0x4b00`).
-* `value`[float] The same as above, but in units of °C. The default (also after reset) is 75 °C.
+* `value`[float] The same as above, but in units of °C. The default (also after reset) is 75 °C. Values outside of the range of the sensor (–128 °C to 127.9375 °C) are clamped.
 
 ```c
   int16_t getLowTemperatureLimitRaw();
@@ -188,6 +191,22 @@ void loop() {
     Serial.print("\n");
   }
 }
+```
+
+## Tests
+The library comes with a test suite that runs on a PC and does not need any hardware. The Arduino API is replaced by a fake I²C bus (see [test/mocks](test/mocks)), which records the bytes on the wire and plays back scripted answers of the sensor. The tests use [doctest](https://github.com/doctest/doctest), which is downloaded by CMake.
+
+To build and run the tests, a C++ compiler, [CMake](https://cmake.org/) (3.14 or later) and git are required:
+```bash
+cmake -S test -B build
+cmake --build build
+ctest --test-dir build --output-on-failure
+```
+
+The tests must cover 100 % of the lines and branches of the library. This is checked using [gcovr](https://gcovr.com/) (`pip install gcovr`) after running the tests:
+```bash
+gcovr --root . --filter src/ --exclude-throw-branches --exclude-unreachable-branches \
+  --fail-under-line 100 --fail-under-branch 100 --txt-metric branch build
 ```
 
 ## Versioning
